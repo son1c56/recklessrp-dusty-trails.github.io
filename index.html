@@ -3,59 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dusty Trails — Motocross Event Flyer</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+<title>Dusty Trails — Motocross Event</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Russo+One&family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --black:   #090909;
-  --black2:  #111111;
-  --black3:  #1A1A1A;
-  --coal:    #222220;
-  --coral:   #D85A30;
-  --coral-l: #F0997B;
-  --coral-d: #8C3A1C;
-  --amber:   #C97A1A;
-  --gray:    #7A7872;
-  --gray-l:  #AEACA5;
-  --gray-ll: #D3D1C7;
-  --white:   #F0EDE6;
-  --off:     #E8E5DC;
+  --dirt:    #0A0806;
+  --mud:     #130F0B;
+  --dark:    #1C1610;
+  --brown:   #2A2018;
+  --rust:    #D85A30;
+  --rust-l:  #F0997B;
+  --rust-d:  #8C3A1C;
+  --rust-dd: #5A2210;
+  --ochre:   #B8780A;
+  --sand:    #8A7A62;
+  --dust:    #cab89c;
+  --ash:     #b8b5b3;
+  --bone:    #ecddc5;
+  --parch:   #E2D5C0;
+  --white:   #EDE5D8;
 }
 
+/* ── GRUNGY NOISE TEXTURE ── */
+@keyframes grain {
+  0%, 100% { transform: translate(0,0); }
+  10%       { transform: translate(-2%,-3%); }
+  20%       { transform: translate(3%,2%); }
+  30%       { transform: translate(-1%,4%); }
+  40%       { transform: translate(4%,-1%); }
+  50%       { transform: translate(-3%,1%); }
+  60%       { transform: translate(2%,-4%); }
+  70%       { transform: translate(-4%,3%); }
+  80%       { transform: translate(1%,-2%); }
+  90%       { transform: translate(-2%,4%); }
+}
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@keyframes scanline {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
 }
 @keyframes flicker {
-  0%, 95%, 100% { opacity: 1; }
-  96%           { opacity: 0.85; }
-  97%           { opacity: 1; }
-  98%           { opacity: 0.9; }
+  0%,89%,91%,93%,100% { opacity:1; }
+  90%  { opacity:0.88; }
+  92%  { opacity:0.95; }
 }
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.4; transform: scale(0.7); }
-}
-@keyframes stripe-scroll {
-  0%   { background-position: 0 0; }
-  100% { background-position: 40px 0; }
+@keyframes dust-drift {
+  0%   { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0; }
+  20%  { opacity: 0.4; }
+  80%  { opacity: 0.2; }
+  100% { transform: translateX(80px) translateY(-60px) rotate(15deg); opacity: 0; }
 }
 
-html { background: var(--black); }
+html { background: var(--dirt); }
 
 body {
-  background: var(--black);
-  color: var(--gray-l);
+  background: var(--dirt);
+  color: var(--bone);
   font-family: 'Barlow', sans-serif;
   font-weight: 300;
   line-height: 1.6;
@@ -63,471 +71,697 @@ body {
   overflow-x: hidden;
 }
 
-/* ── GRAIN OVERLAY ── */
+/* heavy grain layer */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.09;
+  animation: grain 0.4s steps(1) infinite;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* vignette */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 9999;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* ── SCANLINE ── */
-.scanline {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: rgba(216,90,48,0.06);
-  pointer-events: none;
   z-index: 9998;
-  animation: scanline 6s linear infinite;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
 }
 
-/* ── OUTER WRAPPER ── */
+/* ── WRAPPER ── */
 .flyer {
   max-width: 780px;
   margin: 0 auto;
   position: relative;
-  border-left: 1px solid rgba(216,90,48,0.15);
-  border-right: 1px solid rgba(216,90,48,0.15);
+  /* torn/rough border effect via box-shadow */
+  box-shadow:
+    -1px 0 0 rgba(216,90,48,0.12),
+     1px 0 0 rgba(216,90,48,0.12),
+     0 0 60px rgba(0,0,0,0.9);
 }
 
-/* ══════════════════════════════
+/* ══════════════════════════════════
    HERO
-══════════════════════════════ */
+══════════════════════════════════ */
 .hero {
   position: relative;
-  padding: 0;
   overflow: hidden;
-  background: var(--black2);
-  min-height: 520px;
+  background: var(--mud);
+  min-height: 560px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  animation: flicker 8s ease-in-out infinite;
+  animation: flicker 12s ease-in-out infinite;
 }
 
-/* SVG track pattern bg */
+/* dirt texture bg — layered earthy patterns */
 .hero-bg {
   position: absolute;
   inset: 0;
-  overflow: hidden;
 }
 .hero-bg svg {
   width: 100%;
   height: 100%;
-  opacity: 0.07;
 }
 
-/* diagonal stripe accent */
-.hero-stripe {
+/* crack/scratch overlay */
+.hero-cracks {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background-image:
+    linear-gradient(17deg, transparent 48%, rgba(255,255,255,0.8) 49%, transparent 50%),
+    linear-gradient(83deg, transparent 62%, rgba(255,255,255,0.6) 63%, transparent 64%),
+    linear-gradient(142deg, transparent 31%, rgba(255,255,255,0.5) 32%, transparent 33%),
+    linear-gradient(215deg, transparent 71%, rgba(255,255,255,0.7) 72%, transparent 73%);
+}
+
+/* grime/dirt streaks */
+.hero-grime {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 200px 300px at 20% 80%, rgba(10,8,6,0.6) 0%, transparent 100%),
+    radial-gradient(ellipse 300px 200px at 90% 20%, rgba(10,8,6,0.5) 0%, transparent 100%),
+    radial-gradient(ellipse 150px 400px at 60% 50%, rgba(10,8,6,0.3) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* diagonal hazard stripes — subtle */
+.hero-hazard {
   position: absolute;
   top: 0; right: 0;
-  width: 340px;
+  width: 320px;
   height: 100%;
   background: repeating-linear-gradient(
-    -55deg,
+    -52deg,
     transparent,
-    transparent 18px,
-    rgba(216,90,48,0.06) 18px,
-    rgba(216,90,48,0.06) 20px
+    transparent 20px,
+    rgba(184,120,10,0.04) 20px,
+    rgba(184,120,10,0.04) 22px
   );
-  animation: stripe-scroll 3s linear infinite;
 }
 
-/* big number watermark */
+/* rust bleed top */
+.hero-rust-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--rust) 0%, var(--ochre) 30%, var(--rust-d) 60%, transparent 100%);
+}
+
+/* watermark */
 .hero-watermark {
   position: absolute;
-  right: -20px;
-  bottom: -30px;
+  right: -10px;
+  bottom: -20px;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 340px;
+  font-size: 300px;
   line-height: 0.8;
-  color: rgba(216,90,48,0.04);
+  color: rgba(216,90,48,0.03);
   pointer-events: none;
   user-select: none;
   letter-spacing: -0.04em;
 }
 
-/* top bar */
+/* ── TOPBAR ── */
 .hero-topbar {
   position: absolute;
   top: 0; left: 0; right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 40px;
+  padding: 14px 40px;
   border-bottom: 1px solid rgba(255,255,255,0.04);
-  animation: fadeIn 0.6s ease both;
+  background: rgba(10,8,6,0.4);
 }
 .hero-tag {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--coral);
+  color: var(--rust);
 }
 .hero-series {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gray);
+  color: var(--dust);
 }
 
-/* hero content */
+/* ── HERO CONTENT ── */
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 48px 40px 44px;
-  animation: fadeUp 0.7s 0.1s ease both;
+  padding: 52px 40px 46px;
+  animation: fadeUp 0.8s 0.1s ease both;
 }
 
 .hero-eyebrow {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
-.eyebrow-line {
-  width: 32px;
-  height: 1px;
-  background: var(--coral);
-}
+.eyebrow-line { width: 28px; height: 1px; background: var(--rust); }
 .eyebrow-text {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.2em;
+  font-size: 11px;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--coral-l);
+  color: var(--rust-l);
+  /* slight distress */
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
 }
 
+/* TITLE — painted/stencil feel */
 h1.hero-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(88px, 16vw, 148px);
-  line-height: 0.85;
-  letter-spacing: 0.01em;
+  font-size: clamp(82px, 15vw, 140px);
+  line-height: 0.84;
+  letter-spacing: 0.02em;
   color: var(--white);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   display: block;
+  /* worn paint effect */
+  text-shadow:
+    2px 2px 0 rgba(0,0,0,0.9),
+    0 0 40px rgba(216,90,48,0.08);
 }
-.hero-title-sub {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(28px, 5vw, 46px);
-  letter-spacing: 0.08em;
-  color: var(--coral);
+/* TRAILS in rust — slightly skewed for energy */
+.hero-title .rust-word {
+  color: var(--rust);
   display: block;
-  margin-bottom: 28px;
+  letter-spacing: 0.03em;
 }
 
+.hero-title-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(13px, 2.5vw, 18px);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--dust);
+  display: block;
+  margin-bottom: 32px;
+  margin-top: 8px;
+}
+
+/* meta tags */
 .hero-meta {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 0;
   flex-wrap: wrap;
+  border-top: 1px solid rgba(255, 255, 255, 0.479);
+  padding-top: 20px;
+  margin-top: 4px;
 }
 .meta-item {
   display: flex;
   align-items: center;
   gap: 8px;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.1em;
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gray);
+  color: var(--dust);
+  padding: 8px 20px 8px 0;
+  margin-right: 20px;
+  border-right: 1px solid rgba(255,255,255,0.05);
 }
+.meta-item:last-child { border-right: none; }
 .meta-dot {
-  width: 5px;
-  height: 5px;
-  background: var(--coral);
-  animation: pulse-dot 2s ease-in-out infinite;
+  width: 4px; height: 4px;
+  background: var(--rust);
+  animation: pulse-dot 2.5s ease-in-out infinite;
 }
-.meta-val { color: var(--gray-ll); }
+.meta-val { color: var(--bone); }
 
-/* coral bottom border on hero */
+/* bottom rust bar */
 .hero::after {
   content: '';
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--coral) 0%, var(--coral-d) 50%, transparent 100%);
+  height: 2px;
+  background: linear-gradient(90deg, var(--rust-dd) 0%, var(--rust) 25%, var(--ochre) 50%, var(--rust-d) 75%, transparent 100%);
 }
 
-/* ══════════════════════════════
+/* ══════════════════════════════════
    BODY
-══════════════════════════════ */
+══════════════════════════════════ */
 .body {
-  background: var(--black);
-  padding: 56px 40px 64px;
+  background: var(--dirt);
+  padding: 52px 40px 64px;
+  /* subtle inner texture */
+  background-image:
+    radial-gradient(ellipse 600px 400px at 50% 0%, rgba(26,20,14,0.8) 0%, transparent 100%);
 }
 
-/* intro blurb */
+/* ── INTRO GRID ── */
 .intro {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  margin-bottom: 56px;
-  animation: fadeUp 0.7s 0.3s ease both;
+  gap: 40px;
+  margin-bottom: 52px;
+  animation: fadeUp 0.7s 0.25s ease both;
 }
 .intro-label {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--coral);
-  margin-bottom: 14px;
+  color: var(--rust);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.intro-label::before {
+  content: '';
+  display: inline-block;
+  width: 16px; height: 1px;
+  background: var(--rust);
 }
 .intro-text {
-  font-size: 15px;
-  line-height: 1.7;
-  color: var(--gray-l);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--sand);
 }
-.intro-text strong { color: var(--white); font-weight: 400; }
+.intro-text strong { color: var(--bone); font-weight: 400; }
 
-.intro-right {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+/* info table — worn metal plate aesthetic */
+.info-plate {
+  border: 1px solid rgba(255,255,255,0.06);
+  background: var(--mud);
+  position: relative;
+  overflow: hidden;
+}
+.info-plate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 28px,
+    rgba(255,255,255,0.015) 28px,
+    rgba(255,255,255,0.015) 29px
+  );
+  pointer-events: none;
 }
 .info-row {
-  background: var(--black3);
-  padding: 14px 18px;
+  padding: 13px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-.info-row:first-child { border-top: 1px solid rgba(255,255,255,0.03); }
-.info-key {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gray);
-}
-.info-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--gray-ll);
-  text-align: right;
-  max-width: 55%;
-  line-height: 1.3;
-}
-.info-val.accent { color: var(--coral-l); }
-
-/* ── section header ── */
-.sec-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.sec-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 11px;
-  color: var(--coral-d);
-  letter-spacing: 0.1em;
-}
-.sec-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--white);
-}
-.sec-rule {
-  flex: 1;
-  height: 1px;
-  background: rgba(255,255,255,0.05);
-}
-
-/* ── RULES SECTION ── */
-.rules-section {
-  margin-bottom: 52px;
-  animation: fadeUp 0.7s 0.4s ease both;
-}
-.rules-grid {
-  display: flex;
-  flex-direction: column;
-}
-.rule-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  transition: background 0.2s;
-}
-.rule-item:first-child { border-top: 1px solid rgba(255,255,255,0.04); }
-.rule-item:hover { background: rgba(216,90,48,0.03); }
-.rule-index {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 11px;
-  color: var(--coal);
-  width: 44px;
-  flex-shrink: 0;
-  padding: 16px 0 16px 0;
-  user-select: none;
-}
-.rule-bar {
-  width: 2px;
-  background: var(--coal);
-  align-self: stretch;
-  margin-right: 20px;
-  flex-shrink: 0;
-  transition: background 0.2s;
-}
-.rule-item:hover .rule-bar { background: var(--coral-d); }
-.rule-body {
-  padding: 14px 16px 14px 0;
-  flex: 1;
-}
-.rule-text {
-  font-size: 14px;
-  color: var(--gray-l);
-  line-height: 1.6;
-}
-.rule-text strong { color: var(--white); font-weight: 400; }
-.rule-note {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  color: var(--coral-l);
-  margin-top: 3px;
-}
-.rule-badge {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding: 3px 10px;
-  align-self: center;
-  margin-left: auto;
-  flex-shrink: 0;
-  margin-right: 0;
-}
-.badge-stop  { color: var(--coral-l); border: 1px solid rgba(216,90,48,0.3); background: rgba(216,90,48,0.08); }
-.badge-info  { color: #8ABFEF; border: 1px solid rgba(138,191,239,0.2); background: rgba(138,191,239,0.05); }
-.badge-warn  { color: var(--amber); border: 1px solid rgba(201,122,26,0.3); background: rgba(201,122,26,0.07); }
-
-/* ── HIGHLIGHTS STRIP ── */
-.highlights {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: rgba(255,255,255,0.04);
-  margin-bottom: 52px;
-  animation: fadeUp 0.7s 0.5s ease both;
-}
-.hl-item {
-  background: var(--black2);
-  padding: 24px 20px;
-  text-align: center;
   position: relative;
+  z-index: 1;
 }
-.hl-item::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: transparent;
-  transition: background 0.3s;
-}
-.hl-item:hover::before { background: var(--coral); }
-.hl-icon {
-  font-size: 28px;
-  margin-bottom: 10px;
-  display: block;
-  filter: grayscale(1) brightness(1.5);
-  opacity: 0.7;
-}
-.hl-label {
+.info-row:hover { background: rgba(216,90,48,0.03); }
+.info-key {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gray);
+  color: var(--ash);
+}
+.info-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bone);
+  text-align: right;
+  max-width: 58%;
+  line-height: 1.3;
+}
+.info-val.hot { color: var(--rust-l); }
+
+/* ── SECTION HEADER ── */
+.sec-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.sec-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rust-dd);
+}
+.sec-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.1em;
+  color: var(--parch);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
+}
+.sec-rule {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 0px,
+    rgba(255,255,255,0.04) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+/* ── HIGHLIGHTS — ammo/crate style ── */
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 2px;
+  margin-bottom: 52px;
+  animation: fadeUp 0.7s 0.35s ease both;
+}
+.hl-item {
+  background: var(--mud);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 22px 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.hl-item:hover{
+  background: rgba(216, 90, 48, 0.5);
+  border-color: rgba(216, 90, 48, 0.6);
+  box-shadow: 
+    inset 0 0 20px rgba(216, 90, 48, 0.2),
+    0 0 20px rgba(216, 90, 48, 0.3);
+  transform: translateY(-4px);
+}
+.hl-item:hover .hl-icon {
+  opacity: 1;
+  filter: grayscale(0) sepia(0.2) brightness(1.1);
+  transform: scale(1.15);
+}
+.hl-item:hover .hl-val {
+  color: #fff;
+}
+.hl-item:hover::before {
+  border-top-color: var(--rust);
+  filter: drop-shadow(0 0 8px rgba(216, 90, 48, 0.8));
+}
+.hl-item:hover::after {
+  border-bottom-color: var(--rust);
+  filter: drop-shadow(0 0 8px rgba(216, 90, 48, 0.8));
+}
+/* corner notches — military crate look */
+.hl-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 0; height: 0;
+  border-top: 12px solid var(--rust-dd);
+  border-right: 12px solid transparent;
+}
+.hl-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 0; height: 0;
+  border-bottom: 12px solid var(--rust-dd);
+  border-left: 12px solid transparent;
+}
+.hl-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+  display: block;
+  filter: grayscale(1) sepia(0.3) brightness(0.8);
+  opacity: 0.6;
+}
+.hl-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ash);
   margin-bottom: 4px;
 }
 .hl-val {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 22px;
-  color: var(--coral-l);
+  font-size: 20px;
+  color: var(--rust-l);
   line-height: 1;
+  letter-spacing: 0.06em;
+  transition: color 0.3s ease;
 }
 .hl-sub {
-  font-size: 11px;
-  color: var(--gray);
-  margin-top: 3px;
+  font-size: 10px;
+  color: var(--dust);
+  margin-top: 2px;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+.hl-item:hover .hl-sub {
+  color: var(--parch);
+  opacity: 1;
 }
 
-/* ── CTA / ANMELDUNG ── */
+/* ── DATE BANNER — tape/sticker style ── */
+.date-banner {
+  background: var(--rust);
+  padding: 14px 24px;
+  margin-bottom: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.7s 0.3s ease both;
+}
+.date-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(0,0,0,0.1) 10px,
+    rgba(0,0,0,0.1) 12px
+  );
+}
+.date-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.911);
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+  position: relative;
+  z-index: 1;
+}
+.date-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: #fff;
+  letter-spacing: 0.08em;
+  position: relative;
+  z-index: 1;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+}
+.date-time {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.911);
+  letter-spacing: 0.12em;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── RULES — field-manual style ── */
+.rules-section {
+  margin-bottom: 52px;
+  animation: fadeUp 0.7s 0.4s ease both;
+}
+.rules-grid { display: flex; flex-direction: column; }
+.rule-item {
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.rule-item:first-child { border-top: 1px solid rgba(255,255,255,0.03); }
+.rule-item:hover { 
+  background: rgba(216,90,48,0.15);
+  border-bottom-color: rgba(216,90,48,0.4);
+  padding-left: 12px;
+  margin-left: -12px;
+}
+.rule-item:first-child:hover { border-top-color: rgba(216,90,48,0.4); }
+
+/* left gutter — typewriter numbering */
+.rule-index {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ash);
+  width: 40px;
+  flex-shrink: 0;
+  padding: 16px 0;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.04);
+}
+
+/* worn left bar */
+.rule-bar {
+  width: 2px;
+  background: var(--brown);
+  align-self: stretch;
+  margin: 0 16px;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+.rule-item:hover .rule-bar { 
+  background: var(--rust);
+  box-shadow: 0 0 10px rgba(216,90,48,0.6);
+  width: 3px;
+}
+
+.rule-body {
+  padding: 14px 12px 14px 0;
+  flex: 1;
+}
+.rule-text {
+  font-size: 13px;
+  color: var(--sand);
+  line-height: 1.65;
+  transition: color 0.3s ease;
+}
+.rule-item:hover .rule-text {
+  color: var(--bone);
+}
+.rule-text strong { color: var(--bone); font-weight: 400; }
+.rule-note {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--rust-l);
+  margin-top: 3px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+.rule-item:hover .rule-note {
+  opacity: 1;
+}
+
+/* badge — stencil tags */
+.rule-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  align-self: center;
+  margin-left: 12px;
+  flex-shrink: 0;
+  border-width: 1px;
+  border-style: solid;
+  /* rough border via box-shadow */
+}
+.badge-stop { color: var(--rust-l);  background: rgba(216,90,48,0.1); border-color: rgba(216, 90, 48, 0.603); font-weight: 700; font-size: x-small;}
+.badge-info { color: #90B8D8;        background: rgba(144,184,216,0.06); border-color: rgba(144, 184, 216, 0.521); font-weight: 700; font-size: x-small;}
+.badge-warn { color: var(--ochre);   background: rgba(184,120,10,0.1); border-color: rgba(192, 125, 9, 0.733); font-weight: 700; font-size: x-small;}
+
+/* ── CTA — WARNING BOARD ── */
 .cta-block {
-  background: var(--black3);
-  border: 1px solid rgba(216,90,48,0.2);
-  padding: 32px 36px;
+  background: var(--mud);
+  border: 1px solid rgba(216,90,48,0.18);
+  padding: 28px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  margin-bottom: 48px;
+  margin-bottom: 44px;
   position: relative;
   overflow: hidden;
-  animation: fadeUp 0.7s 0.6s ease both;
+  animation: fadeUp 0.7s 0.5s ease both;
 }
+/* thick left stripe — caution tape */
 .cta-block::before {
   content: '';
   position: absolute;
   left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--coral);
+  width: 4px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--rust) 0px,
+    var(--rust) 8px,
+    var(--rust-dd) 8px,
+    var(--rust-dd) 16px
+  );
 }
 .cta-stripe-bg {
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(
-    -55deg,
+    -52deg,
     transparent,
-    transparent 22px,
-    rgba(216,90,48,0.025) 22px,
-    rgba(216,90,48,0.025) 24px
+    transparent 24px,
+    rgba(216,90,48,0.02) 24px,
+    rgba(216,90,48,0.02) 26px
   );
   pointer-events: none;
 }
+/* grime overlay */
+.cta-block::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 200px 100px at 80% 80%, rgba(0,0,0,0.3) 0%, transparent 100%);
+  pointer-events: none;
+}
+.cta-left { position: relative; z-index: 1; }
 .cta-eyebrow {
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 10px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--coral);
-  margin-bottom: 8px;
+  color: var(--rust);
+  margin-bottom: 6px;
 }
 .cta-headline {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 34px;
+  font-size: 32px;
   color: var(--white);
   line-height: 1;
   margin-bottom: 6px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.8);
 }
 .cta-sub {
   font-size: 13px;
-  color: var(--gray);
-  line-height: 1.5;
+  color: var(--sand);
+  line-height: 1.55;
 }
-.cta-right {
-  flex-shrink: 0;
-  text-align: right;
-}
+.cta-sub strong { color: var(--bone); font-weight: 400; }
+
+.cta-right { flex-shrink: 0; position: relative; z-index: 1; }
 .cta-step {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gray);
+  color: var(--dust);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -535,104 +769,120 @@ h1.hero-title {
   margin-bottom: 8px;
 }
 .cta-step-num {
-  width: 22px;
-  height: 22px;
-  border: 1px solid var(--coal);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 20px; height: 20px;
+  border: 1px solid var(--brown);
+  display: flex; align-items: center; justify-content: center;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 13px;
-  color: var(--coral);
+  font-size: 12px;
+  color: var(--rust);
   flex-shrink: 0;
 }
 
 /* ── FOOTER ── */
 .flyer-footer {
-  border-top: 1px solid rgba(255,255,255,0.05);
-  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  padding-top: 28px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: 24px;
-  animation: fadeUp 0.7s 0.7s ease both;
+  animation: fadeUp 0.7s 0.6s ease both;
 }
-.footer-left {}
 .footer-disclaimer {
   font-size: 11px;
-  color: var(--gray);
+  color: var(--ash);
   line-height: 1.7;
-  max-width: 380px;
+  max-width: 360px;
 }
-.footer-disclaimer strong { color: var(--gray-l); font-weight: 400; }
-.footer-brand {
-  text-align: right;
-}
+.footer-disclaimer strong { color: var(--dust); font-weight: 400; }
+.footer-brand { text-align: right; }
 .brand-name {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 38px;
-  color: rgba(216,90,48,0.2);
+  font-size: 36px;
+  color: rgba(216,90,48,0.14);
   line-height: 1;
   letter-spacing: 0.06em;
 }
 .brand-sub {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-size: 9px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gray);
+  color: var(--ash);
   margin-top: 2px;
 }
 
 @media (max-width: 600px) {
   .hero-content { padding: 40px 20px 36px; }
-  .hero-topbar { padding: 14px 20px; }
-  .body { padding: 40px 20px 52px; }
-  .intro { grid-template-columns: 1fr; gap: 32px; }
-  .highlights { grid-template-columns: repeat(3,1fr); }
-  .cta-block { flex-direction: column; text-align: left; }
-  .cta-right { text-align: left; }
-  .cta-step { justify-content: flex-start; }
+  .hero-topbar  { padding: 12px 20px; }
+  .body         { padding: 36px 20px 48px; }
+  .intro        { grid-template-columns: 1fr; gap: 28px; }
+  .cta-block    { flex-direction: column; }
+  .cta-right    { width: 100%; }
+  .cta-step     { justify-content: flex-start; }
   .flyer-footer { flex-direction: column; align-items: flex-start; }
   .footer-brand { text-align: left; }
+  .date-banner  { flex-direction: column; align-items: flex-start; gap: 4px; }
 }
 </style>
 </head>
 <body>
-<div class="scanline"></div>
 <div class="flyer">
 
   <!-- ══ HERO ══ -->
   <div class="hero">
+
     <div class="hero-bg">
-      <svg viewBox="0 0 780 520" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Abstract track shape -->
-        <ellipse cx="390" cy="300" rx="340" ry="200" stroke="#D85A30" stroke-width="1.5"/>
-        <ellipse cx="390" cy="300" rx="260" ry="140" stroke="#D85A30" stroke-width="1"/>
-        <ellipse cx="390" cy="300" rx="180" ry="80" stroke="#D85A30" stroke-width="0.5"/>
-        <!-- start line ticks -->
-        <line x1="720" y1="260" x2="720" y2="340" stroke="#D85A30" stroke-width="1.5"/>
-        <line x1="730" y1="260" x2="730" y2="340" stroke="#D85A30" stroke-width="1.5"/>
+      <svg viewBox="0 0 780 560" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- tire track lines — horizontal worn grooves -->
+        <line x1="0" y1="180" x2="780" y2="180" stroke="#5A3A1A" stroke-width="0.4"/>
+        <line x1="0" y1="182" x2="780" y2="182" stroke="#5A3A1A" stroke-width="0.3"/>
+        <line x1="0" y1="320" x2="780" y2="320" stroke="#5A3A1A" stroke-width="0.4"/>
+        <line x1="0" y1="322" x2="780" y2="322" stroke="#5A3A1A" stroke-width="0.3"/>
+        <!-- vertical grid — measurement lines -->
+        <line x1="130" y1="0" x2="130" y2="560" stroke="#3A2A18" stroke-width="0.3"/>
+        <line x1="390" y1="0" x2="390" y2="560" stroke="#3A2A18" stroke-width="0.3"/>
+        <line x1="650" y1="0" x2="650" y2="560" stroke="#3A2A18" stroke-width="0.3"/>
+        <!-- abstract track oval -->
+        <ellipse cx="390" cy="320" rx="330" ry="190" stroke="#D85A30" stroke-width="1.2" stroke-dasharray="4 8"/>
+        <ellipse cx="390" cy="320" rx="240" ry="130" stroke="#8C3A1C" stroke-width="0.8"/>
+        <!-- start/finish line -->
+        <rect x="705" y="280" width="10" height="80" fill="#D85A30" opacity="0.5"/>
+        <rect x="718" y="280" width="10" height="80" fill="#5A2210" opacity="0.5"/>
         <!-- corner markers -->
-        <circle cx="80" cy="300" r="8" stroke="#D85A30" stroke-width="1"/>
-        <circle cx="700" cy="300" r="8" stroke="#D85A30" stroke-width="1"/>
-        <circle cx="390" cy="110" r="6" stroke="#D85A30" stroke-width="0.8"/>
-        <circle cx="390" cy="490" r="6" stroke="#D85A30" stroke-width="0.8"/>
-        <!-- grid lines -->
-        <line x1="0" y1="100" x2="780" y2="100" stroke="#888" stroke-width="0.3"/>
-        <line x1="0" y1="200" x2="780" y2="200" stroke="#888" stroke-width="0.3"/>
-        <line x1="0" y1="400" x2="780" y2="400" stroke="#888" stroke-width="0.3"/>
-        <line x1="150" y1="0" x2="150" y2="520" stroke="#888" stroke-width="0.3"/>
-        <line x1="390" y1="0" x2="390" y2="520" stroke="#888" stroke-width="0.3"/>
-        <line x1="630" y1="0" x2="630" y2="520" stroke="#888" stroke-width="0.3"/>
+        <circle cx="70"  cy="320" r="7" stroke="#8C3A1C" stroke-width="0.8" fill="none"/>
+        <circle cx="710" cy="320" r="7" stroke="#8C3A1C" stroke-width="0.8" fill="none"/>
+        <circle cx="390" cy="140" r="5" stroke="#8C3A1C" stroke-width="0.6" fill="none"/>
+        <circle cx="390" cy="500" r="5" stroke="#8C3A1C" stroke-width="0.6" fill="none"/>
+        <!-- tire track marks — diagonal scratches -->
+        <line x1="50"  y1="400" x2="180" y2="490" stroke="#6B4A2A" stroke-width="0.5" opacity="0.5"/>
+        <line x1="600" y1="80"  x2="720" y2="150" stroke="#6B4A2A" stroke-width="0.4" opacity="0.4"/>
+        <line x1="100" y1="100" x2="200" y2="60"  stroke="#6B4A2A" stroke-width="0.3" opacity="0.3"/>
+        <!-- dust particles — small circles -->
+        <circle cx="600" cy="200" r="1.5" fill="#8A7A62" opacity="0.3"/>
+        <circle cx="640" cy="180" r="1" fill="#8A7A62" opacity="0.2"/>
+        <circle cx="580" cy="220" r="1" fill="#8A7A62" opacity="0.25"/>
+        <circle cx="660" cy="240" r="2" fill="#8A7A62" opacity="0.15"/>
+        <circle cx="620" cy="160" r="1.5" fill="#8A7A62" opacity="0.2"/>
+        <!-- mud splatter dots -->
+        <circle cx="200" cy="80"  r="3" fill="#2A1810" opacity="0.6"/>
+        <circle cx="220" cy="95"  r="2" fill="#2A1810" opacity="0.5"/>
+        <circle cx="185" cy="100" r="1.5" fill="#2A1810" opacity="0.4"/>
+        <circle cx="700" cy="450" r="4" fill="#2A1810" opacity="0.5"/>
+        <circle cx="720" cy="470" r="2.5" fill="#2A1810" opacity="0.4"/>
+        <circle cx="680" cy="440" r="2" fill="#2A1810" opacity="0.5"/>
       </svg>
     </div>
-    <div class="hero-stripe"></div>
+
+    <div class="hero-cracks"></div>
+    <div class="hero-grime"></div>
+    <div class="hero-hazard"></div>
+    <div class="hero-rust-top"></div>
     <div class="hero-watermark">Z3</div>
 
     <div class="hero-topbar">
       <span class="hero-tag">Reckless RP &mdash; Offizielles Event</span>
-      <span class="hero-series">Motocross Series · S01</span>
+      <span class="hero-series">Motocross Series &middot; S01</span>
     </div>
 
     <div class="hero-content">
@@ -640,8 +890,12 @@ h1.hero-title {
         <div class="eyebrow-line"></div>
         <span class="eyebrow-text">Motocross Rennen</span>
       </div>
-      <h1 class="hero-title">DUSTY<br>TRAILS</h1>
-      <span class="hero-title-sub">Rennbahn Zone 3</span>
+
+      <h1 class="hero-title">
+        DUSTY<br>
+        <span class="rust-word">TRAILS</span>
+      </h1>
+      <span class="hero-title-sub">Rennbahn &middot; Zone 3 &middot; Motocross-Trail</span>
 
       <div class="hero-meta">
         <div class="meta-item">
@@ -649,15 +903,11 @@ h1.hero-title {
           <span>Ort&nbsp;</span><span class="meta-val">Z3 – Motocross-Trail</span>
         </div>
         <div class="meta-item">
-          <div class="meta-dot"></div>
-          <span>Datum&nbsp;</span><span class="meta-val">Freitag, 08.05.2026; Ab 18:30 Uhr</span>
+          <div class="meta-dot" style="animation-delay:.6s"></div>
+          <span>Datum&nbsp;</span><span class="meta-val">Fr. 08.05.2026 &middot; 18:30 Uhr</span>
         </div>
         <div class="meta-item">
-          <div class="meta-dot" style="animation-delay:0.5s;"></div>
-          <span>Format&nbsp;</span><span class="meta-val">Rennen + Runden</span>
-        </div>
-        <div class="meta-item">
-          <div class="meta-dot" style="animation-delay:1s;"></div>
+          <div class="meta-dot" style="animation-delay:1.2s"></div>
           <span>Ausrüstung&nbsp;</span><span class="meta-val">Wird gestellt</span>
         </div>
       </div>
@@ -667,40 +917,58 @@ h1.hero-title {
   <!-- ══ BODY ══ -->
   <div class="body">
 
+    <!-- DATE BANNER -->
+    <div class="date-banner">
+      <span class="date-label">Event-Datum</span>
+      <span class="date-val">Freitag, 08. Mai 2026</span>
+      <span class="date-time">Anmeldung ab 18:30 &nbsp;&middot;&nbsp; Rennstart 19:00 Uhr</span>
+    </div>
+
     <!-- INTRO -->
     <div class="intro">
       <div class="intro-left">
         <div class="intro-label">Das Event</div>
         <p class="intro-text">
-          Die <strong>Dusty Trails</strong> bringen das erste offizielle Motocross-Rennen auf den Z3-Trail. Dreck, Staub und Vollgas — wer zuerst über die Ziellinie kommt, gewinnt. <strong>Motorräder, Helm und Rennanzug</strong> können direkt am Veranstaltungsort ausgeliehen werden. Keine Ausreden, keine Ausnahmen — nur Rennen.
+          Die <strong>Dusty Trails</strong> bringen das erste offizielle Motocross-Rennen auf den Z3-Trail. Dreck, Staub und Vollgas — wer zuerst über die Ziellinie kommt, gewinnt. <strong>Motorräder, Helm und Rennanzug</strong> können direkt am Veranstaltungsort IC ausgeliehen werden. Keine Ausreden. Nur Rennen.
         </p>
       </div>
       <div class="intro-right">
-        <div class="info-row">
-          <span class="info-key">Ort</span>
-          <span class="info-val accent">Z3 – Motocross-Trail</span>
-        </div>
-        <div class="info-row">
-          <span class="info-key">Rennen</span>
-          <span class="info-val">1 Rennen, mehrere Runden</span>
-        </div>
-        <div class="info-row">
-          <span class="info-key">Mehrere Rennen</span>
-          <span class="info-val">Je nach Teilnehmerzahl</span>
-        </div>
-        <div class="info-row">
-          <span class="info-key">Motorräder</span>
-          <span class="info-val accent">Werden gestellt</span>
-        </div>
-        <div class="info-row">
-          <span class="info-key">Helm &amp; Anzug</span>
-          <span class="info-val accent">IC leihbar vor Ort</span>
+        <div class="info-plate">
+          <div class="info-row">
+            <span class="info-key">Ort</span>
+            <span class="info-val hot">Z3 – Motocross-Trail</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">Format</span>
+            <span class="info-val">1 Rennen, mehrere Runden</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">Bei vielen Fahrern</span>
+            <span class="info-val">Mehrere Rennen möglich</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">Motorräder</span>
+            <span class="info-val hot">Werden gestellt</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">Helm &amp; Rennanzug</span>
+            <span class="info-val hot">IC leihbar vor Ort</span>
+          </div>
+          <div class="info-row" style="border-bottom:none;">
+            <span class="info-key">Startgebühr</span>
+            <span class="info-val hot">Beim Rennleiter</span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- HIGHLIGHTS -->
-    <div class="highlights" style="margin-bottom: 52px;">
+    <div class="sec-header">
+      <span class="sec-num">——</span>
+      <span class="sec-title">Auf einen Blick</span>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="highlights" style="margin-bottom:52px;">
       <div class="hl-item">
         <span class="hl-icon">🏍️</span>
         <div class="hl-label">Fahrzeuge</div>
@@ -711,36 +979,36 @@ h1.hero-title {
         <span class="hl-icon">🪖</span>
         <div class="hl-label">Ausrüstung</div>
         <div class="hl-val">Leihbar</div>
-        <div class="hl-sub">Helm &amp; Rennanzug IC</div>
+        <div class="hl-sub">Helm &amp; Anzug IC</div>
       </div>
       <div class="hl-item">
         <span class="hl-icon">🏁</span>
         <div class="hl-label">Format</div>
         <div class="hl-val">Mehrere</div>
-        <div class="hl-sub">Rennen &amp; Runden</div>
+        <div class="hl-sub">Rennen &amp; Runden, bei genug Teilnehmern</div>
       </div>
     </div>
 
     <!-- RULES -->
     <div class="rules-section">
       <div class="sec-header">
-        <span class="sec-num">REGELN</span>
-        <span class="sec-title">Was du wissen musst</span>
+        <span class="sec-num">——</span>
+        <span class="sec-title">Regeln</span>
         <div class="sec-rule"></div>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ash);">Was du wissen musst</span>
       </div>
 
       <div class="rules-grid">
+
         <div class="rule-item">
           <div class="rule-index">01</div>
           <div class="rule-bar"></div>
           <div class="rule-body">
-            <div class="rule-text"><strong>Anmeldung</strong> — Am 08.05.2026 ab 18:30 Uhr möglich, erster Rennstart 19 Uhr!</div>
-            
+            <div class="rule-text"><strong>Anmeldung</strong> — Am 08.05.2026 ab 18:30 Uhr möglich. Erster Rennstart 19:00 Uhr!</div>
           </div>
-          <div class="rule-badge badge-info">Fahrzeug</div>
+          <div class="rule-badge badge-info">Datum</div>
         </div>
 
-        
         <div class="rule-item">
           <div class="rule-index">02</div>
           <div class="rule-bar"></div>
@@ -776,6 +1044,7 @@ h1.hero-title {
           <div class="rule-body">
             <div class="rule-text">Alle Fahrer müssen sich <strong>zum Start an der Startlinie</strong> einfinden — kein Eigenstart.</div>
           </div>
+          <div class="rule-badge badge-stop">Pflicht</div>
         </div>
 
         <div class="rule-item">
@@ -793,37 +1062,25 @@ h1.hero-title {
           <div class="rule-body">
             <div class="rule-text"><strong>Abkürzen</strong> außerhalb der markierten Strecke ist verboten und führt zur sofortigen Disqualifikation.</div>
           </div>
-          <div class="rule-badge badge-warn">DQ</div>
+          <div class="rule-badge badge-warn">Disqualifikation</div>
         </div>
 
       </div>
     </div>
 
-    <!-- ANMELDUNG CTA -->
+    <!-- CTA -->
     <div class="cta-block">
       <div class="cta-stripe-bg"></div>
       <div class="cta-left">
         <div class="cta-eyebrow">Mitmachen</div>
         <div class="cta-headline">Jetzt anmelden</div>
-        <div class="cta-sub">Sprich vor Ort den <strong style="color:var(--gray-ll); font-weight:400;">Rennleiter</strong> an und melde dich IC an.<br>Ausrüstung wird direkt vor Ort leihweise gestellt.</div>
+        <div class="cta-sub">Sprich den <strong>Rennleiter</strong> vor Ort an und melde dich IC an.<br>Startgebühr &amp; Ausrüstung direkt beim Rennleiter.</div>
       </div>
       <div class="cta-right">
-        <div class="cta-step">
-          <div class="cta-step-num">1</div>
-          <span>Rennleiter finden</span>
-        </div>
-        <div class="cta-step">
-          <div class="cta-step-num">2</div>
-          <span>Anmelden & Startgebühr zahlen</span>
-        </div>
-        <div class="cta-step">
-          <div class="cta-step-num">3</div>
-          <span>Ausrüstung leihen</span>
-        </div>
-        <div class="cta-step">
-          <div class="cta-step-num">4</div>
-          <span>Vollgas geben</span>
-        </div>
+        <div class="cta-step"><div class="cta-step-num">1</div><span>Rennleiter finden</span></div>
+        <div class="cta-step"><div class="cta-step-num">2</div><span>Anmelden &amp; Startgebühr zahlen</span></div>
+        <div class="cta-step"><div class="cta-step-num">3</div><span>Ausrüstung leihen</span></div>
+        <div class="cta-step"><div class="cta-step-num">4</div><span>Vollgas geben</span></div>
       </div>
     </div>
 
@@ -832,12 +1089,12 @@ h1.hero-title {
       <div class="footer-left">
         <div class="footer-disclaimer">
           Der Veranstalter behält sich vor, Regeln vor Eventbeginn anzupassen.<br>
-          <strong>Alle Änderungen gelten ab Bekanntgabe (IC).</strong> Der Rennleiter hat das letzte Wort bei Streitigkeiten. Verstöße können zum Ausschluss führen.
+          <strong>Alle Änderungen gelten ab Bekanntgabe (IC).</strong> Der Rennleiter hat das letzte Wort. Verstöße können zum Ausschluss führen.
         </div>
       </div>
       <div class="footer-brand">
         <div class="brand-name">DUSTY<br>TRAILS</div>
-        <div class="brand-sub">Reckless RP · Offizielles Event</div>
+        <div class="brand-sub">Reckless RP &middot; Offizielles Event</div>
       </div>
     </div>
 

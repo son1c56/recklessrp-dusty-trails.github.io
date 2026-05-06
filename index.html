@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dusty Trails — Motocross Event Flyer</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:   #090909;
+  --black2:  #111111;
+  --black3:  #1A1A1A;
+  --coal:    #222220;
+  --coral:   #D85A30;
+  --coral-l: #F0997B;
+  --coral-d: #8C3A1C;
+  --amber:   #C97A1A;
+  --gray:    #7A7872;
+  --gray-l:  #AEACA5;
+  --gray-ll: #D3D1C7;
+  --white:   #F0EDE6;
+  --off:     #E8E5DC;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96%           { opacity: 0.85; }
+  97%           { opacity: 1; }
+  98%           { opacity: 0.9; }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+@keyframes stripe-scroll {
+  0%   { background-position: 0 0; }
+  100% { background-position: 40px 0; }
+}
+
+html { background: var(--black); }
+
+body {
+  background: var(--black);
+  color: var(--gray-l);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── GRAIN OVERLAY ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── SCANLINE ── */
+.scanline {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: rgba(216,90,48,0.06);
+  pointer-events: none;
+  z-index: 9998;
+  animation: scanline 6s linear infinite;
+}
+
+/* ── OUTER WRAPPER ── */
+.flyer {
+  max-width: 780px;
+  margin: 0 auto;
+  position: relative;
+  border-left: 1px solid rgba(216,90,48,0.15);
+  border-right: 1px solid rgba(216,90,48,0.15);
+}
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  background: var(--black2);
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  animation: flicker 8s ease-in-out infinite;
+}
+
+/* SVG track pattern bg */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.hero-bg svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.07;
+}
+
+/* diagonal stripe accent */
+.hero-stripe {
+  position: absolute;
+  top: 0; right: 0;
+  width: 340px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    -55deg,
+    transparent,
+    transparent 18px,
+    rgba(216,90,48,0.06) 18px,
+    rgba(216,90,48,0.06) 20px
+  );
+  animation: stripe-scroll 3s linear infinite;
+}
+
+/* big number watermark */
+.hero-watermark {
+  position: absolute;
+  right: -20px;
+  bottom: -30px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 340px;
+  line-height: 0.8;
+  color: rgba(216,90,48,0.04);
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.04em;
+}
+
+/* top bar */
+.hero-topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  animation: fadeIn 0.6s ease both;
+}
+.hero-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+.hero-series {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+/* hero content */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 48px 40px 44px;
+  animation: fadeUp 0.7s 0.1s ease both;
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.eyebrow-line {
+  width: 32px;
+  height: 1px;
+  background: var(--coral);
+}
+.eyebrow-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--coral-l);
+}
+
+h1.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(88px, 16vw, 148px);
+  line-height: 0.85;
+  letter-spacing: 0.01em;
+  color: var(--white);
+  margin-bottom: 6px;
+  display: block;
+}
+.hero-title-sub {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 5vw, 46px);
+  letter-spacing: 0.08em;
+  color: var(--coral);
+  display: block;
+  margin-bottom: 28px;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.meta-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--coral);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.meta-val { color: var(--gray-ll); }
+
+/* coral bottom border on hero */
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--coral) 0%, var(--coral-d) 50%, transparent 100%);
+}
+
+/* ══════════════════════════════
+   BODY
+══════════════════════════════ */
+.body {
+  background: var(--black);
+  padding: 56px 40px 64px;
+}
+
+/* intro blurb */
+.intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 56px;
+  animation: fadeUp 0.7s 0.3s ease both;
+}
+.intro-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 14px;
+}
+.intro-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--gray-l);
+}
+.intro-text strong { color: var(--white); font-weight: 400; }
+
+.intro-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.info-row {
+  background: var(--black3);
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.info-row:first-child { border-top: 1px solid rgba(255,255,255,0.03); }
+.info-key {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.info-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-ll);
+  text-align: right;
+  max-width: 55%;
+  line-height: 1.3;
+}
+.info-val.accent { color: var(--coral-l); }
+
+/* ── section header ── */
+.sec-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.sec-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  color: var(--coral-d);
+  letter-spacing: 0.1em;
+}
+.sec-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+.sec-rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.05);
+}
+
+/* ── RULES SECTION ── */
+.rules-section {
+  margin-bottom: 52px;
+  animation: fadeUp 0.7s 0.4s ease both;
+}
+.rules-grid {
+  display: flex;
+  flex-direction: column;
+}
+.rule-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.2s;
+}
+.rule-item:first-child { border-top: 1px solid rgba(255,255,255,0.04); }
+.rule-item:hover { background: rgba(216,90,48,0.03); }
+.rule-index {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  color: var(--coal);
+  width: 44px;
+  flex-shrink: 0;
+  padding: 16px 0 16px 0;
+  user-select: none;
+}
+.rule-bar {
+  width: 2px;
+  background: var(--coal);
+  align-self: stretch;
+  margin-right: 20px;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.rule-item:hover .rule-bar { background: var(--coral-d); }
+.rule-body {
+  padding: 14px 16px 14px 0;
+  flex: 1;
+}
+.rule-text {
+  font-size: 14px;
+  color: var(--gray-l);
+  line-height: 1.6;
+}
+.rule-text strong { color: var(--white); font-weight: 400; }
+.rule-note {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--coral-l);
+  margin-top: 3px;
+}
+.rule-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  align-self: center;
+  margin-left: auto;
+  flex-shrink: 0;
+  margin-right: 0;
+}
+.badge-stop  { color: var(--coral-l); border: 1px solid rgba(216,90,48,0.3); background: rgba(216,90,48,0.08); }
+.badge-info  { color: #8ABFEF; border: 1px solid rgba(138,191,239,0.2); background: rgba(138,191,239,0.05); }
+.badge-warn  { color: var(--amber); border: 1px solid rgba(201,122,26,0.3); background: rgba(201,122,26,0.07); }
+
+/* ── HIGHLIGHTS STRIP ── */
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.04);
+  margin-bottom: 52px;
+  animation: fadeUp 0.7s 0.5s ease both;
+}
+.hl-item {
+  background: var(--black2);
+  padding: 24px 20px;
+  text-align: center;
+  position: relative;
+}
+.hl-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: transparent;
+  transition: background 0.3s;
+}
+.hl-item:hover::before { background: var(--coral); }
+.hl-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+  display: block;
+  filter: grayscale(1) brightness(1.5);
+  opacity: 0.7;
+}
+.hl-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 4px;
+}
+.hl-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--coral-l);
+  line-height: 1;
+}
+.hl-sub {
+  font-size: 11px;
+  color: var(--gray);
+  margin-top: 3px;
+}
+
+/* ── CTA / ANMELDUNG ── */
+.cta-block {
+  background: var(--black3);
+  border: 1px solid rgba(216,90,48,0.2);
+  padding: 32px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 48px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.7s 0.6s ease both;
+}
+.cta-block::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--coral);
+}
+.cta-stripe-bg {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -55deg,
+    transparent,
+    transparent 22px,
+    rgba(216,90,48,0.025) 22px,
+    rgba(216,90,48,0.025) 24px
+  );
+  pointer-events: none;
+}
+.cta-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 8px;
+}
+.cta-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 34px;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+}
+.cta-sub {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.5;
+}
+.cta-right {
+  flex-shrink: 0;
+  text-align: right;
+}
+.cta-step {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+.cta-step-num {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--coal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  color: var(--coral);
+  flex-shrink: 0;
+}
+
+/* ── FOOTER ── */
+.flyer-footer {
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  animation: fadeUp 0.7s 0.7s ease both;
+}
+.footer-left {}
+.footer-disclaimer {
+  font-size: 11px;
+  color: var(--gray);
+  line-height: 1.7;
+  max-width: 380px;
+}
+.footer-disclaimer strong { color: var(--gray-l); font-weight: 400; }
+.footer-brand {
+  text-align: right;
+}
+.brand-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px;
+  color: rgba(216,90,48,0.2);
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+.brand-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-top: 2px;
+}
+
+@media (max-width: 600px) {
+  .hero-content { padding: 40px 20px 36px; }
+  .hero-topbar { padding: 14px 20px; }
+  .body { padding: 40px 20px 52px; }
+  .intro { grid-template-columns: 1fr; gap: 32px; }
+  .highlights { grid-template-columns: repeat(3,1fr); }
+  .cta-block { flex-direction: column; text-align: left; }
+  .cta-right { text-align: left; }
+  .cta-step { justify-content: flex-start; }
+  .flyer-footer { flex-direction: column; align-items: flex-start; }
+  .footer-brand { text-align: left; }
+}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="flyer">
+
+  <!-- ══ HERO ══ -->
+  <div class="hero">
+    <div class="hero-bg">
+      <svg viewBox="0 0 780 520" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Abstract track shape -->
+        <ellipse cx="390" cy="300" rx="340" ry="200" stroke="#D85A30" stroke-width="1.5"/>
+        <ellipse cx="390" cy="300" rx="260" ry="140" stroke="#D85A30" stroke-width="1"/>
+        <ellipse cx="390" cy="300" rx="180" ry="80" stroke="#D85A30" stroke-width="0.5"/>
+        <!-- start line ticks -->
+        <line x1="720" y1="260" x2="720" y2="340" stroke="#D85A30" stroke-width="1.5"/>
+        <line x1="730" y1="260" x2="730" y2="340" stroke="#D85A30" stroke-width="1.5"/>
+        <!-- corner markers -->
+        <circle cx="80" cy="300" r="8" stroke="#D85A30" stroke-width="1"/>
+        <circle cx="700" cy="300" r="8" stroke="#D85A30" stroke-width="1"/>
+        <circle cx="390" cy="110" r="6" stroke="#D85A30" stroke-width="0.8"/>
+        <circle cx="390" cy="490" r="6" stroke="#D85A30" stroke-width="0.8"/>
+        <!-- grid lines -->
+        <line x1="0" y1="100" x2="780" y2="100" stroke="#888" stroke-width="0.3"/>
+        <line x1="0" y1="200" x2="780" y2="200" stroke="#888" stroke-width="0.3"/>
+        <line x1="0" y1="400" x2="780" y2="400" stroke="#888" stroke-width="0.3"/>
+        <line x1="150" y1="0" x2="150" y2="520" stroke="#888" stroke-width="0.3"/>
+        <line x1="390" y1="0" x2="390" y2="520" stroke="#888" stroke-width="0.3"/>
+        <line x1="630" y1="0" x2="630" y2="520" stroke="#888" stroke-width="0.3"/>
+      </svg>
+    </div>
+    <div class="hero-stripe"></div>
+    <div class="hero-watermark">Z3</div>
+
+    <div class="hero-topbar">
+      <span class="hero-tag">Scum RP &mdash; Offizielles Event</span>
+      <span class="hero-series">Motocross Series · S01</span>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <div class="eyebrow-line"></div>
+        <span class="eyebrow-text">Motocross Rennen</span>
+      </div>
+      <h1 class="hero-title">DUSTY<br>TRAILS</h1>
+      <span class="hero-title-sub">Rennbahn Zone 3</span>
+
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="meta-dot"></div>
+          <span>Ort&nbsp;</span><span class="meta-val">Z3 – Motocross-Trail</span>
+        </div>
+        <div class="meta-item">
+          <div class="meta-dot" style="animation-delay:0.5s;"></div>
+          <span>Format&nbsp;</span><span class="meta-val">Rennen + Runden</span>
+        </div>
+        <div class="meta-item">
+          <div class="meta-dot" style="animation-delay:1s;"></div>
+          <span>Ausrüstung&nbsp;</span><span class="meta-val">Wird gestellt</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BODY ══ -->
+  <div class="body">
+
+    <!-- INTRO -->
+    <div class="intro">
+      <div class="intro-left">
+        <div class="intro-label">Das Event</div>
+        <p class="intro-text">
+          Die <strong>Dusty Trails</strong> bringen das erste offizielle Motocross-Rennen auf den Z3-Trail. Dreck, Staub und Vollgas — wer zuerst über die Ziellinie kommt, gewinnt. <strong>Motorräder, Helm und Rennanzug</strong> können direkt am Veranstaltungsort ausgeliehen werden. Keine Ausreden, keine Ausnahmen — nur Rennen.
+        </p>
+      </div>
+      <div class="intro-right">
+        <div class="info-row">
+          <span class="info-key">Ort</span>
+          <span class="info-val accent">Z3 – Motocross-Trail</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Rennen</span>
+          <span class="info-val">1 Rennen, mehrere Runden</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Mehrere Rennen</span>
+          <span class="info-val">Je nach Teilnehmerzahl</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Motorräder</span>
+          <span class="info-val accent">Werden gestellt</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Helm &amp; Anzug</span>
+          <span class="info-val accent">IC leihbar vor Ort</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HIGHLIGHTS -->
+    <div class="highlights" style="margin-bottom: 52px;">
+      <div class="hl-item">
+        <span class="hl-icon">🏍️</span>
+        <div class="hl-label">Fahrzeuge</div>
+        <div class="hl-val">Gestellt</div>
+        <div class="hl-sub">Nur Motocross-MR</div>
+      </div>
+      <div class="hl-item">
+        <span class="hl-icon">🪖</span>
+        <div class="hl-label">Ausrüstung</div>
+        <div class="hl-val">Leihbar</div>
+        <div class="hl-sub">Helm &amp; Rennanzug IC</div>
+      </div>
+      <div class="hl-item">
+        <span class="hl-icon">🏁</span>
+        <div class="hl-label">Format</div>
+        <div class="hl-val">Mehrere</div>
+        <div class="hl-sub">Rennen &amp; Runden</div>
+      </div>
+    </div>
+
+    <!-- RULES -->
+    <div class="rules-section">
+      <div class="sec-header">
+        <span class="sec-num">REGELN</span>
+        <span class="sec-title">Was du wissen musst</span>
+        <div class="sec-rule"></div>
+      </div>
+
+      <div class="rules-grid">
+
+        <div class="rule-item">
+          <div class="rule-index">01</div>
+          <div class="rule-bar"></div>
+          <div class="rule-body">
+            <div class="rule-text"><strong>Nur Motocross-Motorräder</strong> — keine anderen Fahrzeuge erlaubt.</div>
+            <div class="rule-note">Motorräder werden vom Veranstalter gestellt.</div>
+          </div>
+          <div class="rule-badge badge-info">Fahrzeug</div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-index">02</div>
+          <div class="rule-bar"></div>
+          <div class="rule-body">
+            <div class="rule-text"><strong>Helmpflicht!</strong> — keine Ausnahmen, auch nicht IC für „style".</div>
+            <div class="rule-note">Rennanzug &amp; Helm sind vor Ort IC leihbar.</div>
+          </div>
+          <div class="rule-badge badge-stop">Pflicht</div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-index">03</div>
+          <div class="rule-bar"></div>
+          <div class="rule-body">
+            <div class="rule-text"><strong>Anmeldung</strong> vor dem Rennen direkt beim Rennleiter — spontane Teilnahme nicht gestattet.</div>
+          </div>
+          <div class="rule-badge badge-info">Anmeldung</div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-index">04</div>
+          <div class="rule-bar"></div>
+          <div class="rule-body">
+            <div class="rule-text">Alle Fahrer müssen sich <strong>zum Start an der Startlinie</strong> einfinden — kein Eigenstart.</div>
+          </div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-index">05</div>
+          <div class="rule-bar"></div>
+          <div class="rule-body">
+            <div class="rule-text"><strong>Rammen, Schubsen, absichtliches Abdrängen</strong> oder vergleichbares Verhalten ist streng verboten.</div>
+          </div>
+          <div class="rule-badge badge-stop">Verboten</div>
+        </div>
+
+        <div class="rule-item">
+          <div class="rule-index">06</div>
+          <div class="rule-bar"></div>
+          <div class="rule-body">
+            <div class="rule-text"><strong>Abkürzen</strong> außerhalb der markierten Strecke ist verboten und führt zur sofortigen Disqualifikation.</div>
+          </div>
+          <div class="rule-badge badge-warn">DQ</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ANMELDUNG CTA -->
+    <div class="cta-block">
+      <div class="cta-stripe-bg"></div>
+      <div class="cta-left">
+        <div class="cta-eyebrow">Mitmachen</div>
+        <div class="cta-headline">Jetzt anmelden</div>
+        <div class="cta-sub">Sprich vor Ort den <strong style="color:var(--gray-ll); font-weight:400;">Rennleiter</strong> an und melde dich IC an.<br>Ausrüstung wird direkt vor Ort leihweise gestellt.</div>
+      </div>
+      <div class="cta-right">
+        <div class="cta-step">
+          <div class="cta-step-num">1</div>
+          <span>Rennleiter finden</span>
+        </div>
+        <div class="cta-step">
+          <div class="cta-step-num">2</div>
+          <span>IC anmelden</span>
+        </div>
+        <div class="cta-step">
+          <div class="cta-step-num">3</div>
+          <span>Ausrüstung leihen</span>
+        </div>
+        <div class="cta-step">
+          <div class="cta-step-num">4</div>
+          <span>Vollgas geben</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="flyer-footer">
+      <div class="footer-left">
+        <div class="footer-disclaimer">
+          Der Veranstalter behält sich vor, Regeln vor Eventbeginn anzupassen.<br>
+          <strong>Alle Änderungen gelten ab Bekanntgabe (IC).</strong> Der Rennleiter hat das letzte Wort bei Streitigkeiten. Verstöße können zum Ausschluss führen.
+        </div>
+      </div>
+      <div class="footer-brand">
+        <div class="brand-name">DUSTY<br>TRAILS</div>
+        <div class="brand-sub">Scum RP · Zone 3</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
